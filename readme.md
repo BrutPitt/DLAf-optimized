@@ -44,7 +44,7 @@ If You want export a DLA object in PLY file format (ascii/binary), please use [*
 
 | Thomas Attractor | DLA on Thomas Attractor |
 | :-----: | :----: |
-|[![](https://raw.githubusercontent.com/BrutPitt/glChAoS.P/master/screenShots/osSS01.jpg)](https://michelemorrone.eu/glchaosp/screenshots.html#osSShots) | [![](https://raw.githubusercontent.com/BrutPitt/glChAoS.P/master/screenShots/ss001.jpg)](https://michelemorrone.eu/glchaosp/screenshots.html#osSShots)|
+|[![](https://user-images.githubusercontent.com/16171743/57495764-ebb7d180-72cf-11e9-9da6-b2f4be227951.jpg)](https://user-images.githubusercontent.com/16171743/57495764-ebb7d180-72cf-11e9-9da6-b2f4be227951.jpg) | [![](https://user-images.githubusercontent.com/16171743/57495805-1b66d980-72d0-11e9-932c-4af44f9293c9.jpg)](https://user-images.githubusercontent.com/16171743/57495805-1b66d980-72d0-11e9-932c-4af44f9293c9.jpg)|
 
 
 **Hooks & Parameters** form [Michael Fogleman](https://github.com/fogleman/dlaf)'s page
