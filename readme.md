@@ -1,4 +1,4 @@
-# dlaf-optimized
+# DLAf-optimized
 
 Optimization of [Michael Fogleman](https://github.com/fogleman/dlaf)'s dlaf project that I used in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P) for large-scale DLA3D growth.
 
@@ -9,11 +9,11 @@ Optimization of [Michael Fogleman](https://github.com/fogleman/dlaf)'s dlaf proj
 All the changes I've made in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P) , I thought I'd make them available here, for simplicity.
 
 ### Main changes
-- Possibility to use for spatial index the *single file header* [nanoflann](https://github.com/jlblancoc/nanoflann) (Fast Library for Approximate Nearest Neighbors), instead of boost library.
+- The use of *single file header* [nanoflann](https://github.com/jlblancoc/nanoflann) (Fast Library for Approximate Nearest Neighbors) for spatial index, instead of boost library.
 - The use of [fastRandomGenerator](https://github.com/BrutPitt/fastRandomGenerator), based on George Marsaglia algorithm, to speedup the generation.
 - The use of `template class` for `Vector` and `Model` with possibilty to use single or double precison floating points.
 
-The [Michael Fogleman](https://github.com/fogleman/dlaf)'s original option (as boost library, or std::mt19937 random generator) are anyway aviables via `#define` 
+The [Michael Fogleman](https://github.com/fogleman/dlaf)'s original option (such as boost library, or std::mt19937 random generator) are anyway aviables via internal `#define` 
 
 **External Dependences**
 
@@ -22,8 +22,8 @@ The [Michael Fogleman](https://github.com/fogleman/dlaf)'s original option (as b
 - `nanoflann.h` -> header-only library for KD-Trees of datasets point clouds: [nanoflann](https://github.com/jlblancoc/nanoflann)
 - `fastRandom.h` -> fastRandomGeneretor based on Marsaglia algorithms: [fastRandomGenerator](https://github.com/BrutPitt/fastRandomGenerator)
 
-If you want use Boost library it's not included in the repository, but can be downloaded from [https://www.boost.org/](https://www.boost.org/)
-It is not necessary to build the library, only headers files is enough. (about 160MB) 
+If you want use Boost library, like the original project, it's not included in the repository, but can be downloaded from [https://www.boost.org/](https://www.boost.org/)
+It's not necessary to build the library, only headers files is enough. (about 160MB) 
 
 ### Output Format
 This program produces only a simple text output, for both for 2D and 3D, always in the form:
@@ -40,14 +40,28 @@ This program produces only a simple text output, for both for 2D and 3D, always 
 ```
 Where the columns are: point_id, parent_id, x, y, z (for 2D z is always 0)
 
-If You want export a DLA object in PLY file format (ascii/binary), please use [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P); you can also import a PLY object, where to grow the DLA:
+You can redirect the output in a file with command: `./dlaf > output.csv`
 
-| Thomas Attractor | DLA on Thomas Attractor |
+If you instead want to export a DLA3D object in PLY file format (ascii/binary), please use [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P); you can also import a PLY object, where to grow the DLA:
+
+| [**glChAoS.P**](https://github.com/BrutPitt/glChAoS.P) - Thomas Attractor |  [**glChAoS.P**](https://github.com/BrutPitt/glChAoS.P) - DLA on Thomas Attractor |
 | :-----: | :----: |
 |[![](https://user-images.githubusercontent.com/16171743/57495764-ebb7d180-72cf-11e9-9da6-b2f4be227951.jpg)](https://user-images.githubusercontent.com/16171743/57495764-ebb7d180-72cf-11e9-9da6-b2f4be227951.jpg) | [![](https://user-images.githubusercontent.com/16171743/57495805-1b66d980-72d0-11e9-932c-4af44f9293c9.jpg)](https://user-images.githubusercontent.com/16171743/57495805-1b66d980-72d0-11e9-932c-4af44f9293c9.jpg)|
 
 
-**Hooks & Parameters** form [Michael Fogleman](https://github.com/fogleman/dlaf)'s page
+### Build DLAf-optimized
+
+Just clone it form github or download the archive and decompress it in a folder whatever and  use `make` from it.
+Obviously need to install the GCC C/C++ v.6 or higher (or clang v.6 or higher) compilers and associated tools (such as *make*), or other C++14 compiler.
+
+To install gcc C/C++ in Linux:
+* Debian, Ubuntu: `sudo apt install build-essential`
+* Fedora, RedHat: `sudo dnf install make gcc-c++`
+
+
+
+### DLAf-optimized - Hooks & Parameters 
+Description form [Michael Fogleman](https://github.com/fogleman/dlaf)'s page:
 
 The code implements a standard diffusion-limited aggregation algorithm. But there are several parameters and code hooks that let you tweak its behavior.
 
