@@ -1,6 +1,7 @@
 #include <chrono>
 #include <iostream>
 #include <vector>
+#include <numeric>
 #include <cmath>
 
 // number of DLA dimensions (must be 2 or 3)
@@ -124,7 +125,7 @@ template <typename T> struct pointCloud
 
 using tPointCloud =  pointCloud<precisionT>;
 using tKDTreeDistanceFunc = nanoflann::L2_Adaptor<precisionT, tPointCloud>;
-using tKDTree = nanoflann::KDTreeSingleIndexDynamicAdaptor<tKDTreeDistanceFunc, tPointCloud, 3>;
+using tKDTree = nanoflann::KDTreeSingleIndexDynamicAdaptor<tKDTreeDistanceFunc, tPointCloud, DLA_DIM>;
 #else
 // boost is used for its spatial index
     #include <boost/function_output_iterator.hpp>
@@ -161,7 +162,7 @@ public:
         m_Stickiness(DefaultStickiness),
         m_BoundingRadius(0)        
 #ifdef  DLAF_USE_FLANN_LIBRARY
-        { m_Index = new tKDTree(DLA_DIM, m_Points, nanoflann::KDTreeSingleIndexAdaptorParams(4 /*max leaf*/)); }
+        { m_Index = new tKDTree(DLA_DIM, m_Points, nanoflann::KDTreeSingleIndexAdaptorParams(10 /*max leaf*/)); }
         ~Model<T>() { delete m_Index; }
 #else        
         {}
@@ -190,24 +191,25 @@ public:
 #ifdef DLAF_USE_FLANN_LIBRARY
     // Add adds a new particle with the specified parent particle
     void Add(const Vector<T>& p, const int parent = -1) {
-        //my_kd_tree_t index(3 /*dim*/, m_Points, KDTreeSingleIndexAdaptorParams(10 /* max leaf */) );
         size_t id = m_Points.pts.size();
         m_Points.pts.push_back(p);
         m_JoinAttempts.push_back(0);
         m_Index->addPoints(id, id);
+
         m_BoundingRadius = std::max(m_BoundingRadius, p.Length() + m_AttractionDistance);
-        std::cout << id << "," << parent << ","
-                  << p.X() << "," << p.Y() << "," << p.Z() << std::endl;
+        std::cout << id << "," << parent << "," << p.X() << "," << p.Y() << "," << p.Z() << std::endl;
 
     }
 
     // Nearest returns the index of the particle nearest the specified point
     uint32_t Nearest(const Vector<T> &point) const {
         size_t ret_index;
-        T out_dist_sqr;
+        T out_dist_sqr = m_AttractionDistance;
         nanoflann::KNNResultSet<T> resultSet(1);
         resultSet.init(&ret_index, &out_dist_sqr );
-        m_Index->findNeighbors(resultSet, (const T *) &point, nanoflann::SearchParams(4));
+        m_Index->findNeighbors(resultSet, (const T *) &point, 
+                               nanoflann::SearchParams(0, //how many leafs to visit - not used in nanoflann
+                                                       m_AttractionDistance*.5)); //search for eps-approximate neighbours
         return ret_index;
     }
 #else
@@ -218,8 +220,7 @@ public:
         m_Points.push_back(p);
         m_JoinAttempts.push_back(0);
         m_BoundingRadius = std::max(m_BoundingRadius, p.Length() + m_AttractionDistance);
-        std::cout << id << "," << parent << ","
-                  << p.X() << "," << p.Y() << "," << p.Z() << std::endl;
+        std::cout << id << "," << parent << "," << p.X() << "," << p.Y() << "," << p.Z() << std::endl;
     }
     // Nearest returns the index of the particle nearest the specified point
     uint32_t Nearest(const Vector<T> &p) const {
@@ -363,24 +364,29 @@ int main() {
     Model<precisionT> model;
 
     // add seed point(s)
-    //model.Add(Vector<precisionT>());
+    model.Add(Vector<precisionT>());
 
-     {
-         const int n = 3600;
-         const precisionT r = 1000;
-         for (int i = 0; i < n; i++) {
-             const precisionT t = (precisionT)i / n;
-             const precisionT a = t * 2 * M_PI;
-             const precisionT x = std::cos(a) * r;
-             const precisionT y = std::sin(a) * r;
-             model.Add(Vector<precisionT>(x, y, 0));
-         }
-     }
+    // {
+    //     const int n = 3600;
+    //     const precisionT r = 1000;
+    //     for (int i = 0; i < n; i++) {
+    //         const precisionT t = (precisionT)i / n;
+    //         const precisionT a = t * 2 * M_PI;
+    //         const precisionT x = std::cos(a) * r;
+    //         const precisionT y = std::sin(a) * r;
+    //         model.Add(Vector<precisionT>(x, y, 0));
+    //     }
+    // }
 
+    auto start = std::chrono::high_resolution_clock::now();
     // run diffusion-limited aggregation
-    for (int i = 0; i < 100000; i++) {
+    for (int i = 0; i < 1000000; i++) {
         model.AddParticle();
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff = end-start;
+
+    std::cerr << "Time elapsed: " << diff.count() << " sec." << std::endl;
 
     return 0;
 }
