@@ -15,7 +15,22 @@ All the changes I've made in [**glChAoS.P / wglChAoS.P**](https://github.com/Bru
 
 The [Michael Fogleman](https://github.com/fogleman/dlaf)'s original option (such as boost library, or std::mt19937 random generator) are anyway aviables via internal `#define` 
 
-**External Dependences**
+**Performance and differences calculating 1M of points**
+
+Tests were performed on Intel I5 6500, 3.2 GHz, single thread, with DDR4 2666MHz, compiled with gcc 8.3.1 on Linux Fedora29.
+
+- **Single precision tests** (float)
+  - nanoflann / fastRandom:   **63.21 sec.**
+  - nanoflann / std::mt19937: **65.04 sec.**
+  - boost lib / fastRandom: **123.78 sec.**
+  - boost lib / std::mt19937: **125.33 sec.**
+- **Double precision tests** (double)
+  - nanoflann / fastRandom:   **68.14 sec.**
+  - nanoflann / std::mt19937: **69.96 sec.**
+  - boost lib / fastRandom: **124.62 sec.**
+  - boost lib / std::mt19937: **126.57 sec.**
+
+### External Dependences
 
 **NONE**: all files are already included in the project/repository
 
