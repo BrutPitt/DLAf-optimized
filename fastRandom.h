@@ -42,7 +42,7 @@ public:
     fastRandom32Class()
     {
  // obtain a seed from the system clock:
-        rnd32.seed(std::chrono::system_clock::now().time_since_epoch().count());
+        rnd32.seed(uint32_t(std::chrono::system_clock::now().time_since_epoch().count()));
 
         initialize(rnd32(), rnd32(), rnd32(),
                    rnd32(), rnd32(), rnd32());
@@ -65,7 +65,7 @@ public:
     inline static uint32_t xorShift() //period 2^32-1
     {
         // Algorithm "xor" from p. 4 of Marsaglia, "Xorshift RNGs" 
-        static uint32_t state = std::chrono::system_clock::now().time_since_epoch().count();
+        static uint32_t state = uint32_t(std::chrono::system_clock::now().time_since_epoch().count());
         uint32_t x = state;
         x ^= x << 13;
         x ^= x >> 17;
@@ -111,7 +111,7 @@ public:
     fastRandom64Class()
     {
  // obtain a seed from the system clock:
-        rnd64.seed(std::chrono::system_clock::now().time_since_epoch().count());
+        rnd64.seed(uint64_t(std::chrono::system_clock::now().time_since_epoch().count()));
 
         initialize(rnd64(), rnd64(), rnd64(), 
                    rnd64(), rnd64(), rnd64());
@@ -127,7 +127,7 @@ public:
     inline static uint64_t xorShift() //period 2^64-1
     {
         // Algorithm "xor" from p. 4 of Marsaglia, "Xorshift RNGs" 
-        static uint64_t state = std::chrono::system_clock::now().time_since_epoch().count();
+        static uint64_t state = uint64_t(std::chrono::system_clock::now().time_since_epoch().count());
         uint64_t x = state;
         x ^= x << 13;
         x ^= x >> 7;

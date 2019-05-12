@@ -3,10 +3,9 @@
 Optimization of [Michael Fogleman](https://github.com/fogleman/dlaf)'s dlaf project that I used in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P) for large-scale DLA3D growth.
 
 [![](https://raw.githubusercontent.com/BrutPitt/glChAoS.P/master/screenShots/dla3D.jpg)](https://twitter.com/i/status/1120431893818769409)
+This is a 3D real-time rendering (25 FPS) of 10M points/particles
 
-
-
-All the changes I've made in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P) , I thought I'd make them available here, for simplicity.
+All the changes I made to [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P), I thought I'd make them available here, for simplicity.
 
 ### Main changes
 - The use of *single file header* [nanoflann](https://github.com/jlblancoc/nanoflann) (Fast Library for Approximate Nearest Neighbors) for spatial index, instead of boost library.
@@ -73,6 +72,7 @@ To install gcc C/C++ in Linux:
 * Debian, Ubuntu: `sudo apt install build-essential`
 * Fedora, RedHat: `sudo dnf install make gcc-c++`
 
+In the `dlaf` folder there is a very simple `cmake` file from wich you can build also a *project solution* for Microsoft Visual Studio.
 
 
 ### DLAf-optimized - Hooks & Parameters 

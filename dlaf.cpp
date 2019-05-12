@@ -190,33 +190,33 @@ public:
 
 #ifdef DLAF_USE_FLANN_LIBRARY
     // Add adds a new particle with the specified parent particle
-    void Add(const Vector<T>& p, const int parent = -1) {
+    void Add(const Vector<T>& p, const size_t parent = -1) {
         size_t id = m_Points.pts.size();
         m_Points.pts.push_back(p);
         m_JoinAttempts.push_back(0);
         m_Index->addPoints(id, id);
 
         m_BoundingRadius = std::max(m_BoundingRadius, p.Length() + m_AttractionDistance);
-        std::cout << id << "," << parent << "," << p.X() << "," << p.Y() << "," << p.Z() << std::endl;
+        //std::cout << id << "," << parent << "," << p.X() << "," << p.Y() << "," << p.Z() << std::endl;
 
     }
 
     // Nearest returns the index of the particle nearest the specified point
-    uint32_t Nearest(const Vector<T> &point) const {
+    size_t Nearest(const Vector<T> &point) const {
         size_t ret_index;
         T out_dist_sqr = m_AttractionDistance;
         nanoflann::KNNResultSet<T> resultSet(1);
         resultSet.init(&ret_index, &out_dist_sqr );
         m_Index->findNeighbors(resultSet, (const T *) &point, 
                                nanoflann::SearchParams(0, //how many leafs to visit - not used in nanoflann
-                                                       m_AttractionDistance*.5)); //search for eps-approximate neighbours
+                                                       m_AttractionDistance*T(.5))); //search for eps-approximate neighbours
         return ret_index;
     }
 #else
     // Add adds a new particle with the specified parent particle
-    void Add(const Vector<T> &p, const int parent = -1) {
-        const uint32_t id = m_Points.size();
-        m_Index.insert(std::make_pair(BoostPoint(p.X(), p.Y(), p.Z()), id));
+    void Add(const Vector<T> &p, const size_t parent = -1) {
+        const size_t id = m_Points.size();
+        m_Index.insert(std::make_pair(BoostPoint(p.X(), p.Y(), p.Z()), uint32_t(id)));
         m_Points.push_back(p);
         m_JoinAttempts.push_back(0);
         m_BoundingRadius = std::max(m_BoundingRadius, p.Length() + m_AttractionDistance);
@@ -261,12 +261,12 @@ public:
     // ShouldJoin returns true if the point should attach to the specified
     // parent particle. This is only called when the point is already within
     // the required attraction distance.
-    bool ShouldJoin(const Vector<T> &p, const int parent) {
+    bool ShouldJoin(const Vector<T> &p, const size_t parent) {
         return (m_JoinAttempts[parent]++ < m_Stubbornness) ? false : DLA_RANDOM_01 <= m_Stickiness;
     }
 
     // PlaceParticle computes the final placement of the particle.
-    Vector<T> PlaceParticle(const Vector<T> &p, const int parent) const {
+    Vector<T> PlaceParticle(const Vector<T> &p, const size_t parent) const {
         return Lerp(parentPOINT(parent), p, m_ParticleSpacing);
     }
 
@@ -278,14 +278,14 @@ public:
     }
 
     // AddParticle diffuses one new particle and adds it to the model
-    Vector<T> AddParticle() {
+    void AddParticle() {
         // compute particle starting location
         Vector<T> p = RandomStartingPosition();
 
         // do the random walk
         while (true) {
             // get distance to nearest other particle
-            const int parent = Nearest(p);
+            const size_t parent = Nearest(p);
             const T d = p.Distance(parentPOINT(parent));
 
             // check if close enough to join
@@ -301,7 +301,7 @@ public:
 
                 // adjust particle pos in relation to its parent and add the point
                 Add(PlaceParticle(p, parent), parent);
-                return thisPOINT.back();
+                return;
             }
 
             // move randomly
