@@ -60,7 +60,7 @@ If you instead want to export a DLA3D object in PLY file format (ascii/binary), 
 
 | [**glChAoS.P**](https://github.com/BrutPitt/glChAoS.P) - Thomas Attractor |  [**glChAoS.P**](https://github.com/BrutPitt/glChAoS.P) - DLA on Thomas Attractor |
 | :-----: | :----: |
-|[![](https://user-images.githubusercontent.com/16171743/57495764-ebb7d180-72cf-11e9-9da6-b2f4be227951.jpg)](https://user-images.githubusercontent.com/16171743/57495764-ebb7d180-72cf-11e9-9da6-b2f4be227951.jpg) | [![](https://user-images.githubusercontent.com/16171743/57495805-1b66d980-72d0-11e9-932c-4af44f9293c9.jpg)](https://user-images.githubusercontent.com/16171743/57495805-1b66d980-72d0-11e9-932c-4af44f9293c9.jpg)|
+|[![](https://user-images.githubusercontent.com/16171743/57495764-ebb7d180-72cf-11e9-9da6-b2f4be227951.jpg)](https://user-images.githubusercontent.com/16171743/57495764-ebb7d180-72cf-11e9-9da6-b2f4be227951.jpg) | [![](https://user-images.githubusercontent.com/16171743/57906343-e6cbc280-7879-11e9-8ada-fc639dce60d4.jpg)](https://user-images.githubusercontent.com/16171743/57906343-e6cbc280-7879-11e9-8ada-fc639dce60d4.jpg)|
 
 
 ### Build DLAf-optimized
