@@ -1,11 +1,11 @@
 # DLAf-optimized
 
-Optimization of [Michael Fogleman](https://github.com/fogleman/dlaf)'s dlaf project that I used in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P) for large-scale DLA3D growth.
+This is an optimized version of [Michael Fogleman](https://github.com/fogleman/dlaf)'s dlaf project that I used in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P) for large-scale DLA3D growth.
 
 [![](https://raw.githubusercontent.com/BrutPitt/glChAoS.P/master/screenShots/dla3D.jpg)](https://twitter.com/i/status/1120431893818769409)
-This is a 3D real-time rendering (25 FPS) of 10M points/particles
+Real-time rendering (65 FPS) of 10M points/particles
 
-All the changes I made to [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P), I thought I'd make them available here, for simplicity.
+All the changes has been made in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P), but I thought I'd make them available here, in a separate repository, for simplicity.
 
 ### Main changes
 - The use of *single file header* [nanoflann](https://github.com/jlblancoc/nanoflann) (Fast Library for Approximate Nearest Neighbors) for spatial index, instead of boost library.
