@@ -3,7 +3,7 @@
 This is an optimized version of [Michael Fogleman](https://github.com/fogleman/dlaf)'s dlaf project that I used in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P) for large-scale DLA3D growth.
 
 [![](https://raw.githubusercontent.com/BrutPitt/glChAoS.P/master/screenShots/dla3D.jpg)](https://youtu.be/_R7akPh64XU)
-Real-time rendering (65 FPS) of 10M points/particles
+Video Real-time rendering (80 FPS) of 6M points/particles: https://youtu.be/_R7akPh64XU 
 
 All the changes has been made in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P), but I thought I'd make them available here, in a separate repository, for simplicity.
 
