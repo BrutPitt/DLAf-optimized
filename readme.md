@@ -1,6 +1,6 @@
 # DLAf-optimized
 
-This is an optimized version of [Michael Fogleman](https://github.com/fogleman/dlaf)'s dlaf project that I used in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P) for large-scale DLA3D growth.
+This is an optimized version of [Michael Fogleman's dlaf](https://github.com/fogleman/dlaf) project that I used in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P) for large-scale DLA3D growth.
 
 [![](https://raw.githubusercontent.com/BrutPitt/glChAoS.P/master/screenShots/dla3D.jpg)](https://youtu.be/_R7akPh64XU)
 Video Real-time rendering (80 FPS) of 6M points/particles: https://youtu.be/_R7akPh64XU 
@@ -61,6 +61,9 @@ If you instead want to export a DLA3D object in PLY file format (ascii/binary), 
 | [**glChAoS.P**](https://github.com/BrutPitt/glChAoS.P) - Thomas Attractor |  [**glChAoS.P**](https://github.com/BrutPitt/glChAoS.P) - DLA on Thomas Attractor |
 | :-----: | :----: |
 |[![](https://user-images.githubusercontent.com/16171743/57495764-ebb7d180-72cf-11e9-9da6-b2f4be227951.jpg)](https://user-images.githubusercontent.com/16171743/57495764-ebb7d180-72cf-11e9-9da6-b2f4be227951.jpg) | [![](https://user-images.githubusercontent.com/16171743/57906343-e6cbc280-7879-11e9-8ada-fc639dce60d4.jpg)](https://user-images.githubusercontent.com/16171743/57906343-e6cbc280-7879-11e9-8ada-fc639dce60d4.jpg)|
+
+Watch **[DLA3D over Thomas Attractor Video](https://youtu.be/Eu69KcPms_s)**
+
 
 
 ### Build DLAf-optimized
