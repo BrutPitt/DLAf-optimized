@@ -1,7 +1,6 @@
 #include <chrono>
 #include <iostream>
 #include <vector>
-#include <numeric>
 #include <cmath>
 
 // number of DLA dimensions (must be 2 or 3)
@@ -10,58 +9,46 @@
 // change to use float or double precision
 using precisionT = float;
 
+//#define DLAF_BENCHMARK
 
-// Vector represents a point or a vector
+// vec3 represents a point or a vec3
 /////////////////////////////////////////////////////////////////////
-template <typename T> class Vector {
+template<typename T> class vec3 {
 public:
-    Vector<T>()              : m_X(0), m_Y(0), m_Z(0) {}
-    Vector<T>(T x, T y)      : m_X(x), m_Y(y), m_Z(0) {}
-    Vector<T>(T x, T y, T z) : m_X(x), m_Y(y), m_Z(z) {}
+    T x, y, z;
 
-    T X() const { return m_X; }
-    T Y() const { return m_Y; }
-    T Z() const { return m_Z; }
+    vec3() {}
+    vec3(T s) : x(s), y(s), z(s) {}
+    vec3(T x, T y) : x(x), y(y), z(0) {}
+    vec3(T x, T y, T z) : x(x), y(y), z(z) {}
 
-    T Length() const {
-        return std::sqrt(m_X * m_X + m_Y * m_Y + m_Z * m_Z);
-    }
+    const vec3 operator-() const { return vec3(-x, -y, -z); }
 
-    T LengthSquared() const {
-        return m_X * m_X + m_Y * m_Y + m_Z * m_Z;
-    }
+    vec3& operator+=(const vec3& v) { x += v.x; y += v.y; z += v.z; return *this; }
+    vec3& operator-=(const vec3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
+    vec3& operator*=(const vec3& v) { x *= v.x; y *= v.y; z *= v.z; return *this; }
+    vec3& operator/=(const vec3& v) { x /= v.x; y /= v.y; z /= v.z; return *this; }
+    vec3& operator*=(T s)           { x *= s  ; y *= s  ; z *= s  ; return *this; }
+    vec3& operator/=(T s)           { x /= s  ; y /= s  ; z /= s  ; return *this; }
 
-    T Distance(const Vector<T> &v) const {
-        const T dx = m_X - v.m_X;
-        const T dy = m_Y - v.m_Y;
-        const T dz = m_Z - v.m_Z;
-        return std::sqrt(dx * dx + dy * dy + dz * dz);
-    }
+    const vec3 operator+(const vec3& v) const { return vec3(x + v.x, y + v.y, z + v.z); }
+    const vec3 operator-(const vec3& v) const { return vec3(x - v.x, y - v.y, z - v.z); }
+    const vec3 operator*(const vec3& v) const { return vec3(x * v.x, y * v.y, z * v.z); }
+    const vec3 operator/(const vec3& v) const { return vec3(x / v.x, y / v.y, z / v.z); }
+    const vec3 operator*(T s)           const { return vec3(x * s  , y * s  , z * s  ); }
+    const vec3 operator/(T s)           const { return vec3(x / s  , y / s  , z / s  ); }
 
-    Vector<T> Normalized() const {
-        const T m = 1 / Length();
-        return Vector<T>(m_X * m, m_Y * m, m_Z * m);
-    }
+    const T& operator[](int i) const { return *(&x + i); }
+          T& operator[](int i)       { return *(&x + i); }
 
-    Vector<T> operator+(const Vector<T> &v) const {
-        return Vector<T>(m_X + v.m_X, m_Y + v.m_Y, m_Z + v.m_Z);
-    }
+    operator const T *() const { return &x; }
+    operator       T *()       { return &x; }
 
-    Vector<T> operator-(const Vector<T> &v) const {
-        return Vector<T>(m_X - v.m_X, m_Y - v.m_Y, m_Z - v.m_Z);
-    }
+    T Length() const { return std::sqrt(LengthSquared()); }
+    T LengthSquared() const { return x*x + y*y + z*z; }
+    T Distance(const vec3 &v) const { const vec3 dv(*this-v); return dv.Length(); }
+    vec3 Normalized() const { const T m = 1 / Length(); return vec3(x*m, y*m, z*m); }
 
-    Vector<T> operator*(const T a) const {
-        return Vector<T>(m_X * a, m_Y * a, m_Z * a);
-    }
-
-    Vector<T> &operator+=(const Vector<T> &v) {
-        m_X += v.m_X; m_Y += v.m_Y; m_Z += v.m_Z;
-        return *this;
-    }
-
-private:
-    T m_X, m_Y, m_Z;
 };
 
 // Pseudo Random Generator to use
@@ -105,7 +92,7 @@ private:
 
 template <typename T> struct pointCloud
 {
-    std::vector<Vector<T>> pts;
+    std::vector<vec3<T>> pts;
     
     // Must return the number of data points
     inline size_t kdtree_get_point_count() const { return pts.size(); }
@@ -113,8 +100,8 @@ template <typename T> struct pointCloud
     // Returns the dim'th component of the idx'th point in the class:
     // Since this is inlined and the "dim" argument is typically an immediate value, the
     //  "if/else's" are actually solved at compile time.
-    inline T kdtree_get_pt(const size_t idx, const size_t dim) const
-    { return dim==0 ? pts[idx].X() : (dim==1 ? pts[idx].Y() : pts[idx].Z()); }
+    inline T kdtree_get_pt(const size_t idx, const size_t dim) const { return pts[idx][dim]; }
+
     
     // Optional bounding-box computation: return false to default to a standard bbox computation loop.
     //   Return true if the BBOX was already computed by the class and returned in "bb" so it can be avoided to redo it again.
@@ -140,7 +127,7 @@ using tKDTree = nanoflann::KDTreeSingleIndexDynamicAdaptor<tKDTreeDistanceFunc, 
 #endif
 
 // Lerp linearly interpolates from a to b by distance.
-template<typename T> Vector<T> Lerp(const Vector<T> &a, const Vector<T> &b, const T d) {
+template<typename T> vec3<T> Lerp(const vec3<T> &a, const vec3<T> &b, const T d) {
     return a + (b - a).Normalized() * d;
 }
 
@@ -190,19 +177,21 @@ public:
 
 #ifdef DLAF_USE_FLANN_LIBRARY
     // Add adds a new particle with the specified parent particle
-    void Add(const Vector<T>& p, const size_t parent = -1) {
+    void Add(const vec3<T>& p, const size_t parent = -1) {
         size_t id = m_Points.pts.size();
         m_Points.pts.push_back(p);
         m_JoinAttempts.push_back(0);
         m_Index->addPoints(id, id);
 
         m_BoundingRadius = std::max(m_BoundingRadius, p.Length() + m_AttractionDistance);
-        //std::cout << id << "," << parent << "," << p.X() << "," << p.Y() << "," << p.Z() << std::endl;
+#ifndef DLAF_BENCHMARK
+        std::cout << id << "," << parent << "," << p.x << "," << p.y << "," << p.z << std::endl;
+#endif
 
     }
 
     // Nearest returns the index of the particle nearest the specified point
-    size_t Nearest(const Vector<T> &point) const {
+    size_t Nearest(const vec3<T> &point) const {
         size_t ret_index;
         T out_dist_sqr = m_AttractionDistance;
         nanoflann::KNNResultSet<T> resultSet(1);
@@ -214,19 +203,21 @@ public:
     }
 #else
     // Add adds a new particle with the specified parent particle
-    void Add(const Vector<T> &p, const size_t parent = -1) {
+    void Add(const vec3<T> &p, const size_t parent = -1) {
         const size_t id = m_Points.size();
-        m_Index.insert(std::make_pair(BoostPoint(p.X(), p.Y(), p.Z()), uint32_t(id)));
+        m_Index.insert(std::make_pair(BoostPoint(p.x, p.y, p.z), uint32_t(id)));
         m_Points.push_back(p);
         m_JoinAttempts.push_back(0);
         m_BoundingRadius = std::max(m_BoundingRadius, p.Length() + m_AttractionDistance);
-        std::cout << id << "," << parent << "," << p.X() << "," << p.Y() << "," << p.Z() << std::endl;
+#ifndef DLAF_BENCHMARK
+        std::cout << id << "," << parent << "," << p.x << "," << p.y << "," << p.z << std::endl;
+#endif
     }
     // Nearest returns the index of the particle nearest the specified point
-    uint32_t Nearest(const Vector<T> &p) const {
+    uint32_t Nearest(const vec3<T> &p) const {
         uint32_t result = -1;
         m_Index.query(
-            boost::geometry::index::nearest(BoostPoint(p.X(), p.Y(), p.Z()), 1),
+            boost::geometry::index::nearest(BoostPoint(p.x, p.y, p.z), 1),
             boost::make_function_output_iterator([&result](const auto &value) {
                 result = value.second;
             }));
@@ -235,10 +226,10 @@ public:
 #endif
     // RandomInUnitSphere returns a random, uniformly distributed point inside the
     // unit sphere (radius = 1)
-    Vector<T> RandomInUnitSphere() const {
-        Vector<T> p;
+    vec3<T> RandomInUnitSphere() const {
+        vec3<T> p;
         do {
-            p = Vector<T>(DLA_RANDOM_NORM, 
+            p = vec3<T>(DLA_RANDOM_NORM, 
                           DLA_RANDOM_NORM, 
                           DLA_DIM == 2 ? T(0) : DLA_RANDOM_NORM);
         } while(p.Length() >= T(1.0));
@@ -247,40 +238,40 @@ public:
     }
 
     // RandomStartingPosition returns a random point to start a new particle
-    Vector<T> RandomStartingPosition() const {
+    vec3<T> RandomStartingPosition() const {
         const T d = m_BoundingRadius;
         return RandomInUnitSphere().Normalized() * d;
     }
 
     // ShouldReset returns true if the particle has gone too far away and
     // should be reset to a new random starting position
-    bool ShouldReset(const Vector<T> &p) const {
+    bool ShouldReset(const vec3<T> &p) const {
         return p.Length() > m_BoundingRadius * T(2);
     }
 
     // ShouldJoin returns true if the point should attach to the specified
     // parent particle. This is only called when the point is already within
     // the required attraction distance.
-    bool ShouldJoin(const Vector<T> &p, const size_t parent) {
+    bool ShouldJoin(const vec3<T> &p, const size_t parent) {
         return (m_JoinAttempts[parent]++ < m_Stubbornness) ? false : DLA_RANDOM_01 <= m_Stickiness;
     }
 
     // PlaceParticle computes the final placement of the particle.
-    Vector<T> PlaceParticle(const Vector<T> &p, const size_t parent) const {
+    vec3<T> PlaceParticle(const vec3<T> &p, const size_t parent) const {
         return Lerp(parentPOINT(parent), p, m_ParticleSpacing);
     }
 
-    // MotionVector returns a vector specifying the direction that the
+    // Motionvec3 returns a vec3 specifying the direction that the
     // particle should move for one iteration. The distance that it will move
     // is determined by the algorithm.
-    Vector<T> MotionVector(const Vector<T> &p) const {
+    vec3<T> Motionvec3(const vec3<T> &p) const {
         return RandomInUnitSphere();
     }
 
     // AddParticle diffuses one new particle and adds it to the model
     void AddParticle() {
         // compute particle starting location
-        Vector<T> p = RandomStartingPosition();
+        vec3<T> p = RandomStartingPosition();
 
         // do the random walk
         while (true) {
@@ -300,13 +291,13 @@ public:
                 p = PlaceParticle(p, parent);
 
                 // adjust particle pos in relation to its parent and add the point
-                Add(PlaceParticle(p, parent), parent);
+                Add(PlaceParticle(p, parent), parent); 
                 return;
             }
 
             // move randomly
             const T m = std::max(m_MinMoveDistance, d - m_AttractionDistance);
-                p += MotionVector(p).Normalized() * m;
+                p += Motionvec3(p).Normalized() * m;
 
             // check if particle is too far away, reset if so
             if (ShouldReset(p)) p = RandomStartingPosition();
@@ -352,7 +343,7 @@ private:
     // m_Index is the spatial index used to accelerate nearest neighbor queries
     Index m_Index;
     // m_Points stores the final particle positions
-    std::vector<Vector<T>> m_Points;
+    std::vector<vec3<T>> m_Points;
 #endif
 };
 
@@ -360,11 +351,14 @@ int main() {
     // use float or double precision
     //  using precisionT = float;
 
+    auto start = std::chrono::high_resolution_clock::now();
+    // run diffusion-limited aggregation
+
     // create the model
     Model<precisionT> model;
 
     // add seed point(s)
-    model.Add(Vector<precisionT>());
+    model.Add(vec3<precisionT>(0.0));
 
     // {
     //     const int n = 3600;
@@ -374,15 +368,13 @@ int main() {
     //         const precisionT a = t * 2 * M_PI;
     //         const precisionT x = std::cos(a) * r;
     //         const precisionT y = std::sin(a) * r;
-    //         model.Add(Vector<precisionT>(x, y, 0));
+    //         model.Add(vec3<precisionT>(x, y, 0));
     //     }
     // }
-
-    auto start = std::chrono::high_resolution_clock::now();
-    // run diffusion-limited aggregation
     for (int i = 0; i < 1000000; i++) {
         model.AddParticle();
     }
+   
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end-start;
 
