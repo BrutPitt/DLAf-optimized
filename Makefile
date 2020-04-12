@@ -4,8 +4,11 @@ COMPILE_FLAGS = -std=c++14 -flto -O3 -Wall -Wextra -pedantic -Wno-unused-paramet
 
 all: $(TARGET)
 
-$(TARGET): $(TARGET).cpp
-	$(CC) $(COMPILE_FLAGS) -o $(TARGET) $(TARGET).cpp
+$(TARGET): $(TARGET).o
+	$(CC) -o $(TARGET) $(TARGET).o 
+
+$(TARGET).o: $(TARGET).cpp
+	$(CC) -c $(COMPILE_FLAGS) $(TARGET).cpp
 
 clean:
 	$(RM) $(TARGET)
