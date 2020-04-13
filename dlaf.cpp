@@ -17,12 +17,12 @@ template<typename T> class vec3 {
 public:
     T x, y, z;
 
-    vec3() {}
-    vec3(T s) : x(s), y(s), z(s) {}
+    vec3() = default;
+    explicit vec3(T s) : x(s), y(s), z(s) {}
     vec3(T x, T y) : x(x), y(y), z(0) {}
     vec3(T x, T y, T z) : x(x), y(y), z(z) {}
 
-    const vec3 operator-() const { return vec3(-x, -y, -z); }
+    vec3 operator-() const { return { -x, -y, -z }; }
 
     vec3& operator+=(const vec3& v) { x += v.x; y += v.y; z += v.z; return *this; }
     vec3& operator-=(const vec3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
@@ -31,23 +31,23 @@ public:
     vec3& operator*=(T s)           { x *= s  ; y *= s  ; z *= s  ; return *this; }
     vec3& operator/=(T s)           { x /= s  ; y /= s  ; z /= s  ; return *this; }
 
-    const vec3 operator+(const vec3& v) const { return vec3(x + v.x, y + v.y, z + v.z); }
-    const vec3 operator-(const vec3& v) const { return vec3(x - v.x, y - v.y, z - v.z); }
-    const vec3 operator*(const vec3& v) const { return vec3(x * v.x, y * v.y, z * v.z); }
-    const vec3 operator/(const vec3& v) const { return vec3(x / v.x, y / v.y, z / v.z); }
-    const vec3 operator*(T s)           const { return vec3(x * s  , y * s  , z * s  ); }
-    const vec3 operator/(T s)           const { return vec3(x / s  , y / s  , z / s  ); }
+    vec3 operator+(const vec3& v) const { return { x + v.x, y + v.y, z + v.z }; }
+    vec3 operator-(const vec3& v) const { return { x - v.x, y - v.y, z - v.z }; }
+    vec3 operator*(const vec3& v) const { return { x * v.x, y * v.y, z * v.z }; }
+    vec3 operator/(const vec3& v) const { return { x / v.x, y / v.y, z / v.z }; }
+    vec3 operator*(T s)           const { return { x * s  , y * s  , z * s   }; }
+    vec3 operator/(T s)           const { return { x / s  , y / s  , z / s   }; }
 
     const T& operator[](int i) const { return *(&x + i); }
           T& operator[](int i)       { return *(&x + i); }
 
-    operator const T *() const { return &x; }
-    operator       T *()       { return &x; }
+    explicit operator T *() const { return &x; }
+    explicit operator T *()       { return &x; }
 
     T Length() const { return std::sqrt(LengthSquared()); }
     T LengthSquared() const { return x*x + y*y + z*z; }
-    T Distance(const vec3 &v) const { const vec3 dv(*this-v); return dv.Length(); }
-    vec3 Normalized() const { const T m = 1 / Length(); return vec3(x*m, y*m, z*m); }
+    T Distance(const vec3 &v) const { const vec3 dv{*this-v}; return dv.Length(); }
+    vec3 Normalized() const { const T m = 1 / Length(); return { x*m, y*m, z*m }; }
 
 };
 
