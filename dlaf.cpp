@@ -62,7 +62,10 @@ public:
     #ifdef DLAF_USE_64BIT_GENERATOR
         floatfastRandomClass<precisionT, fastRand64> fastRandom;    
     #else
+    // time seed initialization
         floatfastRandomClass<precisionT, fastRand32> fastRandom;
+    //  const seed initialization: repeat same numbers sequence
+    //  floatfastRandomClass<precisionT, fastRand32> fastRandom(12345);
     #endif    
     #define DLA_RANDOM_NORM fastRandom.VNI()    // [-1.0, 1.0]
     #define DLA_RANDOM_01   fastRandom.UNI()    // [ 0.0, 1.0]
@@ -177,7 +180,7 @@ public:
 
 #ifdef DLAF_USE_FLANN_LIBRARY
     // Add adds a new particle with the specified parent particle
-    void Add(const vec3<T>& p, const size_t parent = -1) {
+    void Add(const vec3<T>& p, const size_t parent = 0) {
         size_t id = m_Points.pts.size();
         m_Points.pts.push_back(p);
         m_JoinAttempts.push_back(0);
