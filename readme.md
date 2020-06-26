@@ -8,8 +8,8 @@ Video Real-time rendering (80 FPS) of 6M points/particles: https://youtu.be/_R7a
 All the changes has been made in [**glChAoS.P / wglChAoS.P**](https://github.com/BrutPitt/glChAoS.P), but I thought I'd make them available here, in a separate repository, for simplicity.
 
 ### Main changes
-- The use of *single file header* [nanoflann](https://github.com/jlblancoc/nanoflann) (Fast Library for Approximate Nearest Neighbors) for spatial index, instead of boost library.
-- The use of [fastRandomGenerator](https://github.com/BrutPitt/fastRandomGenerator), based on George Marsaglia algorithm, to speedup the generation.
+- The use of *single file header* [**nanoflann**](https://github.com/jlblancoc/nanoflann) (Fast Library for Approximate Nearest Neighbors) for spatial index, instead of boost library.
+- The use of [**fastPRNG**](https://github.com/BrutPitt/fastPRNG), based xoshiro / xoroshiro (Blackman/Vigna), xorshift and other Marsaglia algorithms.
 - The use of `template class` for `Vector` and `Model` with possibilty to use single or double precison floating points.
 
 The [Michael Fogleman](https://github.com/fogleman/dlaf)'s original option (such as boost library, or std::mt19937 random generator) are anyway aviables via internal `#define` 
@@ -33,8 +33,8 @@ Tests were performed on: Intel I5 6500 - 3.2 GHz - single thread - DDR4 2666MHz 
 
 **NONE**: all files are already included in the project/repository
 
-- `nanoflann.h` -> header-only library for KD-Trees of datasets point clouds: [nanoflann](https://github.com/jlblancoc/nanoflann)
-- `fastRandom.h` -> fastRandomGeneretor based on Marsaglia algorithms: [fastRandomGenerator](https://github.com/BrutPitt/fastRandomGenerator)
+- `nanoflann.h` -> header-only library for KD-Trees of datasets point clouds: [**nanoflann**](https://github.com/jlblancoc/nanoflann)
+- `fastPRNG.h` -> fastRandomGeneretor based on Marsaglia algorithms: [**fastPRNG**](https://github.com/BrutPitt/fastPRNG)
 
 If you want use Boost library, like the original project, it's not included in the repository, but can be downloaded from [https://www.boost.org/](https://www.boost.org/)
 It's not necessary to build the library, only headers files is enough. (about 160MB) 

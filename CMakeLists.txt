@@ -7,5 +7,5 @@ include_directories(.)
 
 add_executable(DLAf_optimized
         dlaf.cpp
-        fastRandom.h
+        fastPRNG.h
         nanoflann.hpp)

@@ -9,6 +9,10 @@
 // change to use float or double precision
 using precisionT = float;
 
+// BENCHMARKS
+//      It Don't prints values add only to memory, use if you
+//      want to bench several PRNG-algorithms/indices-libs
+//
 //#define DLAF_BENCHMARK
 
 // vec3 represents a point or a vec3
@@ -55,20 +59,19 @@ public:
 /////////////////////////////////////////////////////////////////////
 #define DLAF_USE_FAST_RANDOM    //comment to use std::mt19937 & std::uniform_real_distribution
 #ifdef DLAF_USE_FAST_RANDOM
-//Use Marsaglia fast random generator
-    #include "fastRandom.h"
-    using namespace fstRnd;
-    //#define DLAF_USE_64BIT_GENERATOR
+//Use Blackman/Vigna fast random generator
+    #include "fastPRNG.h"
+    using namespace fastPRNG;
+    #define DLAF_USE_64BIT_GENERATOR
     #ifdef DLAF_USE_64BIT_GENERATOR
-        floatfastRandomClass<precisionT, fastRand64> fastRandom;    
+        fastXS64 fastRandom;
+        #define DLA_RANDOM_VNI fastRandom.xoroshiro128p_VNI<T>()    // [-1.0, 1.0]
+        #define DLA_RANDOM_UNI fastRandom.xoroshiro128p_UNI<T>()    // [ 0.0, 1.0]
     #else
-    // time seed initialization
-        floatfastRandomClass<precisionT, fastRand32> fastRandom;
-    //  const seed initialization: repeat same numbers sequence
-    //  floatfastRandomClass<precisionT, fastRand32> fastRandom(12345);
-    #endif    
-    #define DLA_RANDOM_NORM fastRandom.VNI()    // [-1.0, 1.0]
-    #define DLA_RANDOM_01   fastRandom.UNI()    // [ 0.0, 1.0]
+        fastXS32 fastRandom;
+        #define DLA_RANDOM_NORM fastRandom.xoshiro128p_VNI<T>()    // [-1.0, 1.0]
+        #define DLA_RANDOM_01   fastRandom.xoshiro128p_UNI<T>()    // [ 0.0, 1.0]
+    #endif
 #else
 // std::mt19937 & std::uniform_real_distribution
 // Random returns a uniformly distributed random number between lo and hi
@@ -232,9 +235,9 @@ public:
     vec3<T> RandomInUnitSphere() const {
         vec3<T> p;
         do {
-            p = vec3<T>(DLA_RANDOM_NORM, 
-                          DLA_RANDOM_NORM, 
-                          DLA_DIM == 2 ? T(0) : DLA_RANDOM_NORM);
+            p = vec3<T>(DLA_RANDOM_VNI,
+                        DLA_RANDOM_VNI,
+                        DLA_DIM == 2 ? T(0) : DLA_RANDOM_VNI);
         } while(p.Length() >= T(1.0));
 
         return p;
@@ -256,7 +259,7 @@ public:
     // parent particle. This is only called when the point is already within
     // the required attraction distance.
     bool ShouldJoin(const vec3<T> &p, const size_t parent) {
-        return (m_JoinAttempts[parent]++ < m_Stubbornness) ? false : DLA_RANDOM_01 <= m_Stickiness;
+        return (m_JoinAttempts[parent]++ < m_Stubbornness) ? false : DLA_RANDOM_UNI <= m_Stickiness;
     }
 
     // PlaceParticle computes the final placement of the particle.
@@ -385,3 +388,4 @@ int main() {
 
     return 0;
 }
+
