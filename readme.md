@@ -34,7 +34,7 @@ Tests were performed on: Intel I5 6500 - 3.2 GHz - single thread - DDR4 2666MHz 
 **NONE**: all files are already included in the project/repository
 
 - `nanoflann.h` -> header-only library for KD-Trees of datasets point clouds: [**nanoflann**](https://github.com/jlblancoc/nanoflann)
-- `fastPRNG.h` -> fastRandomGeneretor based on Marsaglia algorithms: [**fastPRNG**](https://github.com/BrutPitt/fastPRNG)
+- `fastPRNG.h` -> fast PRNG (Pseudo-Random Number Generator) based xoshiro / xoroshiro (Blackman/Vigna), xorshift and other Marsaglia algorithms.: [**fastPRNG**](https://github.com/BrutPitt/fastPRNG)
 
 If you want use Boost library, like the original project, it's not included in the repository, but can be downloaded from [https://www.boost.org/](https://www.boost.org/)
 It's not necessary to build the library, only headers files is enough. (about 160MB) 
