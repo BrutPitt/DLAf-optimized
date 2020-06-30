@@ -19,14 +19,14 @@ The [Michael Fogleman](https://github.com/fogleman/dlaf)'s original option (such
 Tests were performed on: Intel I5 6500 - 3.2 GHz - single thread - DDR4 2666MHz - source code compiled with gcc 8.3.1 on Linux Fedora29.
 
 - **Single precision tests** (float)
-  - nanoflann / fastRandom:   **63.21 sec.**
+  - nanoflann / [**fastPRNG**](https://github.com/BrutPitt/fastPRNG):   **63.21 sec.**
   - nanoflann / std::mt19937: **65.04 sec.**
-  - boost lib / fastRandom: **123.78 sec.**
+  - boost lib / [**fastPRNG**](https://github.com/BrutPitt/fastPRNG): **123.78 sec.**
   - boost lib / std::mt19937: **125.33 sec.**
 - **Double precision tests** (double)
-  - nanoflann / fastRandom:   **68.14 sec.**
+  - nanoflann / [**fastPRNG**](https://github.com/BrutPitt/fastPRNG):   **68.14 sec.**
   - nanoflann / std::mt19937: **70.06 sec.**
-  - boost lib / fastRandom: **124.62 sec.**
+  - boost lib / [**fastPRNG**](https://github.com/BrutPitt/fastPRNG): **124.62 sec.**
   - boost lib / std::mt19937: **126.57 sec.**
 
 ### External Dependences
